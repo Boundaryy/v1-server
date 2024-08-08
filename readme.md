@@ -2,7 +2,7 @@
 Commit Rules
 | type | description |
 | --- | --- |
-| ADD ::  | 기능 추가 |
+| FEAT ::  | 기능 추가 |
 | FIX :: | 수정 |
 | DOCS :: | 세부 기능 추가 |
 | STYLE :: | 코드 스타일 변경 |
