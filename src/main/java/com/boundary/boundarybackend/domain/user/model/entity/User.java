@@ -1,5 +1,6 @@
 package com.boundary.boundarybackend.domain.user.model.entity;
 
+import com.boundary.boundarybackend.domain.user.model.dto.vo.MemberRole;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,9 +21,15 @@ public class User {
 
     private Integer age; // 나이
 
+    private String phoneNum; // 전화번호
+
     private String gender; // 성별
 
     private String userId; // 아이디
 
     private String password; // 비밀번호
+
+    private MemberRole role; // 부모or아이
+
+    private Integer point; // 포인트
 }
