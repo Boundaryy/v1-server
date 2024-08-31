@@ -32,4 +32,6 @@ public class User {
     private MemberRole role; // 부모or아이
 
     private Integer point; // 포인트
+
+    private String childId; // 아이 아이디
 }
