@@ -33,9 +33,17 @@ public class AuthenticationFacade {
         return authService.refreshToken(tokenRefreshRequest);
     }
 
-    public void signUp(SignUpRequest req) {
+    public void signUpChild(ChildSignUpRequest req) {
         try {
-            userService.create(req);
+            userService.createChild(req);
+        } catch (Exception e) {
+            throw new BusinessException(ErrorCode.DUPLICATED);
+        }
+    }
+
+    public void signUpParent(ParentSignUpRequest req) {
+        try {
+            userService.createParent(req);
         } catch (Exception e) {
             throw new BusinessException(ErrorCode.DUPLICATED);
         }

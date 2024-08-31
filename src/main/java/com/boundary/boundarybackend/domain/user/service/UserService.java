@@ -1,9 +1,10 @@
 package com.boundary.boundarybackend.domain.user.service;
 
+import com.boundary.boundarybackend.domain.user.model.dto.request.ParentSignUpRequest;
 import com.boundary.boundarybackend.domain.user.repository.UserRepository;
 import com.boundary.boundarybackend.common.exception.BusinessException;
 import com.boundary.boundarybackend.common.exception.ErrorCode;
-import com.boundary.boundarybackend.domain.user.model.dto.request.SignUpRequest;
+import com.boundary.boundarybackend.domain.user.model.dto.request.ChildSignUpRequest;
 import com.boundary.boundarybackend.domain.user.model.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +19,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Transactional
-    public void create(SignUpRequest req) {
+    public void createChild(ChildSignUpRequest req) {
         try {
             // 회원 저장
             User user = userRepository.save(User.builder()
@@ -30,6 +31,24 @@ public class UserService {
                     .password(new BCryptPasswordEncoder().encode(req.getPassword())) // 비밀번호
                     .role(req.getRole()) // 부모or아이 권한
                     .point(req.getPoint()) // 포인트
+                    .build()
+            );
+        } catch (Exception e) {
+            log.error("회원 생성 중 오류 발생: {}", e.getMessage());
+            throw new BusinessException(ErrorCode.UNKNOWN_ERROR);
+        }
+    }
+
+    @Transactional
+    public void createParent(ParentSignUpRequest req) {
+        try {
+            // 회원 저장
+            User user = userRepository.save(User.builder()
+                    .phoneNum(req.getPhoneNum()) // 전화번호
+                    .userId(req.getUserId()) // 사용자 아이디
+                    .password(new BCryptPasswordEncoder().encode(req.getPassword())) // 비밀번호
+                    .role(req.getRole()) // 부모 or 아이 권한
+                    .childId(req.getChildId()) // 아이 아이디
                     .build()
             );
         } catch (Exception e) {
