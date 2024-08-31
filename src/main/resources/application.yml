@@ -1,0 +1,32 @@
+server.port : 5001  # ??? 5000? ???? ??
+
+spring:
+  config:
+    import:
+      - application-db.yml
+      - application-security.yml
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+  jackson: # JSON ???? ???? ?? Jackson ?????
+    time-zone: Asia/Seoul
+    serialization:
+      write-dates-as-timestamps: false  # ??? ISO 8601 ???? ??
+
+springdoc:
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+  swagger-ui:
+    path: /swagger-ui.html  # Swagger UI? ?? ??? /swagger-ui.html? ??
+    disable-swagger-default-url: true  # Swagger? ?? URL? ????
+    display-request-duration: true  # ??? ?? ??? ??
+    operations-sorter: alpha  # Swagger UI?? API ??? ??? ??? ??
+
+#server:
+#  ssl:
+#    key-store: ${SPRING_SSL_KEY_STORE}  # SSL ??? ?? ??
+#    key-store-type: ${SPRING_SSL_KEY_STORE_TYPE}  # SSL ???? ??
+#    key-alias: ${SPRING_SSL_KEY_ALIAS}  # ?????? ??? ?? ??
+#    key-store-password: ${SPRING_SSL_KEY_STORE_PASSWORD}  # ???? ????
