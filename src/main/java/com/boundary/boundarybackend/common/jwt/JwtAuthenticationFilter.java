@@ -7,18 +7,14 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import static java.util.Collections.emptyList;
 
 // 로그를 위한 어노테이션
 @Slf4j
@@ -47,12 +43,12 @@ public class JwtAuthenticationFilter extends GenericFilter {
                     // 토큰 검증 및 클레임 추출
                     Jwt.Claims claims = verify(token);
                     Long memberId = claims.memberId;
-                    List<GrantedAuthority> authorities = getAuthorities(claims);
+//                    List<GrantedAuthority> authorities = getAuthorities(claims);
 
                     // 클레임이 유효하고 권한이 있으면 인증 객체 생성
-                    if (memberId != null && authorities.size() > 0) {
+                    if (memberId != null) {
                         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-                                new UsernamePasswordAuthenticationToken(memberId, null, authorities);
+                                new UsernamePasswordAuthenticationToken(memberId, null);
                         // 인증 객체를 SecurityContextHolder에 설정
                         SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
                     }
@@ -92,14 +88,14 @@ public class JwtAuthenticationFilter extends GenericFilter {
     }
 
     // 클레임에서 권한 리스트를 생성
-    private List<GrantedAuthority> getAuthorities(Jwt.Claims claims) {
-        String[] roles = claims.roles;
-        if (roles == null || roles.length == 0) {
-            return emptyList();
-        }
-        return Arrays.stream(roles)
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
-    }
+//    private List<GrantedAuthority> getAuthorities(Jwt.Claims claims) {
+//        String[] roles = claims.roles;
+//        if (roles == null || roles.length == 0) {
+//            return emptyList();
+//        }
+//        return Arrays.stream(roles)
+//                .map(SimpleGrantedAuthority::new)
+//                .collect(Collectors.toList());
+//    }
 }
 

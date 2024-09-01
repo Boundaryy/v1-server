@@ -10,7 +10,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.Arrays;
 import java.util.Date;
 
 public class Jwt {
@@ -48,7 +47,6 @@ public class Jwt {
                 .withIssuedAt(now)
                 .withExpiresAt(new Date(now.getTime() + expireTime * 1000L))
                 .withClaim("memberId", claims.memberId)
-                .withArrayClaim("roles", claims.roles)
                 .sign(algorithm);
     }
 
@@ -60,7 +58,6 @@ public class Jwt {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Claims {
         Long memberId;
-        String[] roles;
         Date iat;
         Date exp;
 
@@ -69,18 +66,13 @@ public class Jwt {
             if (!memberId.isNull()) {
                 this.memberId = memberId.asLong();
             }
-            Claim roles = decodedJwt.getClaim("roles");
-            if (!roles.isNull()) {
-                this.roles = roles.asArray(String.class);
-            }
             this.iat = decodedJwt.getIssuedAt();
             this.exp = decodedJwt.getExpiresAt();
         }
 
-        public static Claims from(Long memberId, String[] roles) {
+        public static Claims from(Long memberId) {
             Claims claims = new Claims();
             claims.memberId = memberId;
-            claims.roles = roles;
             return claims;
         }
 
@@ -89,7 +81,6 @@ public class Jwt {
             return "Claims{"
                     + "memberId=" + memberId
                     + ", roles="
-                    + Arrays.toString(roles)
                     + ", iat=" + iat
                     + ", exp="
                     + exp
