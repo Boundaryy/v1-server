@@ -22,15 +22,23 @@ import static com.boundary.boundarybackend.common.util.AuthenticationUtil.getMem
 public class AuthController {
 
     private final AuthenticationFacade authenticationFacade;
-    @Operation(summary = "회원가입")
-    @PostMapping("/sign-up")
-    public ResponseEntity<String> signUp(
-            @Valid @RequestBody SignUpRequest req) {
-        authenticationFacade.signUp(req);
+    @Operation(summary = "자녀 회원가입")
+    @PostMapping("/signup/child")
+    public ResponseEntity<String> signUpChild(
+            @Valid @RequestBody ChildSignUpRequest req) {
+        authenticationFacade.signUpChild(req);
         return new ResponseEntity<>("회원가입이 완료되었습니다.", HttpStatus.OK);
     }
 
-    @Operation(summary = "회원 로그인")
+    @Operation(summary = "부모 회원가입")
+    @PostMapping("/signup/parent")
+    public ResponseEntity<String> signUpParent(
+            @Valid @RequestBody ParentSignUpRequest req) {
+        authenticationFacade.signUpParent(req);
+        return new ResponseEntity<>("회원가입이 완료되었습니다.", HttpStatus.OK);
+    }
+
+    @Operation(summary = "로그인")
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest req) {
         return ResponseEntity.ok(authenticationFacade.login(req));
