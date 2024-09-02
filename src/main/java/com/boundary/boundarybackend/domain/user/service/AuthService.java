@@ -7,6 +7,7 @@ import com.boundary.boundarybackend.common.exception.ErrorCode;
 import com.boundary.boundarybackend.common.jwt.Jwt;
 import com.boundary.boundarybackend.domain.user.model.dto.request.TokenRefreshRequest;
 import com.boundary.boundarybackend.domain.user.model.dto.response.LoginResponse;
+import com.boundary.boundarybackend.domain.user.model.dto.vo.MemberRole;
 import com.boundary.boundarybackend.domain.user.model.entity.User;
 import com.boundary.boundarybackend.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -66,7 +67,9 @@ public class AuthService {
         try {
             TokenResponse tokenResponse = jwt.generateAllToken(
                     Jwt.Claims.from(
-                            user.getId())
+                            user.getId(),
+                            user.getRole())
+
             );
 
             user.setRefreshToken(tokenResponse.refreshToken());
@@ -86,18 +89,19 @@ public class AuthService {
             if (user.isEmpty()) {
                 throw new AccessDeniedException("refresh token 이 만료되었습니다.");
             }
-
+            MemberRole role;
             Long memberId;
 
             try {
                 Jwt.Claims claims = jwt.verify(user.get().getRefreshToken());
                 memberId = claims.getMemberId();
+                role = claims.getRole();
             } catch (Exception e) {
                 log.warn("Jwt 처리중 문제가 발생하였습니다 : {}", e.getMessage());
                 throw new AccessDeniedException("Jwt 처리중 문제가 발생하였습니다.");
             }
 
-            TokenResponse tokenResponse = jwt.generateAllToken(Jwt.Claims.from(memberId));
+            TokenResponse tokenResponse = jwt.generateAllToken(Jwt.Claims.from(memberId,role));
             user.get().setRefreshToken(tokenResponse.refreshToken());
 
             return tokenResponse;

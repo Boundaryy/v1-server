@@ -6,6 +6,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.boundary.boundarybackend.common.dto.TokenResponse;
+import com.boundary.boundarybackend.domain.user.model.dto.vo.MemberRole;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -47,6 +48,7 @@ public class Jwt {
                 .withIssuedAt(now)
                 .withExpiresAt(new Date(now.getTime() + expireTime * 1000L))
                 .withClaim("memberId", claims.memberId)
+                .withClaim("role", claims.role.name()) // Enum 값을 문자열로 변환하여 저장
                 .sign(algorithm);
     }
 
@@ -58,6 +60,7 @@ public class Jwt {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Claims {
         Long memberId;
+        MemberRole role;
         Date iat;
         Date exp;
 
@@ -70,9 +73,10 @@ public class Jwt {
             this.exp = decodedJwt.getExpiresAt();
         }
 
-        public static Claims from(Long memberId) {
+        public static Claims from(Long memberId,MemberRole role) {
             Claims claims = new Claims();
             claims.memberId = memberId;
+            claims.role = role;
             return claims;
         }
 
@@ -80,10 +84,9 @@ public class Jwt {
         public String toString() {
             return "Claims{"
                     + "memberId=" + memberId
-                    + ", roles="
+                    + ", roles=" + role // 배열이 아니라면 직접 사용
                     + ", iat=" + iat
-                    + ", exp="
-                    + exp
+                    + ", exp=" + exp
                     + '}';
         }
     }
