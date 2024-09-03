@@ -1,6 +1,8 @@
 package com.boundary.boundarybackend.domain.user.service;
 
 import com.boundary.boundarybackend.domain.user.model.dto.request.ParentSignUpRequest;
+import com.boundary.boundarybackend.domain.user.model.entity.Attendance;
+import com.boundary.boundarybackend.domain.user.repository.AttendanceRepository;
 import com.boundary.boundarybackend.domain.user.repository.UserRepository;
 import com.boundary.boundarybackend.common.exception.BusinessException;
 import com.boundary.boundarybackend.common.exception.ErrorCode;
@@ -12,11 +14,16 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Optional;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final AttendanceRepository attendanceRepository;
 
     @Transactional
     public void createChild(ChildSignUpRequest req) {
@@ -56,4 +63,33 @@ public class UserService {
             throw new BusinessException(ErrorCode.UNKNOWN_ERROR);
         }
     }
+
+    @Transactional
+    public boolean recordAttendance(Long userId) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String formattedDate = LocalDate.now().format(formatter);
+
+        Optional<Attendance> todayAttendance = attendanceRepository.findByUserIdAndAttendanceDate(userId, formattedDate);
+
+        if (todayAttendance.isPresent()) {
+            return false;
+        }
+
+        // 새로운 출석 기록 생성
+        Attendance attendance = Attendance.builder()
+                .userId(userId)
+                .attendanceDate(formattedDate)
+                .build();
+
+        attendanceRepository.save(attendance);
+        return true;
+    }
+
+    @Transactional
+    public User getUserById(Long userId) {
+        // userId로 해당 User 엔티티 조회
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
+    }
+
 }
