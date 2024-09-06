@@ -1,6 +1,7 @@
 package com.boundary.boundarybackend.domain.user.service;
 
 import com.boundary.boundarybackend.domain.user.model.dto.request.ParentSignUpRequest;
+import com.boundary.boundarybackend.domain.user.model.dto.response.UserResponse;
 import com.boundary.boundarybackend.domain.user.model.entity.Attendance;
 import com.boundary.boundarybackend.domain.user.repository.AttendanceRepository;
 import com.boundary.boundarybackend.domain.user.repository.UserRepository;
@@ -85,11 +86,20 @@ public class UserService {
         return true;
     }
 
+
     @Transactional
-    public User getUserById(Long userId) {
+    public UserResponse getUserById(Long userId) {
         // userId로 해당 User 엔티티 조회
-        return userRepository.findById(userId)
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
+
+        // Return the relevant fields in a UserResponse
+        return new UserResponse(
+                user.getName(),
+                user.getUserId(),
+                user.getPoint(),
+                user.getChildId()
+        );
     }
 
 }
