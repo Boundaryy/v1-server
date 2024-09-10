@@ -1,28 +1,39 @@
 package com.boundary.boundarybackend.domain.situation.model.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EntityListeners(AuditingEntityListener.class)
 public class Situation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long userId;
+    private String content;
 
     private String threadId;
 
-    private String feedBack;
+    private String parentId;
 
-    private LocalDate finishTime;
+    private String childId;
+
+    @CreatedDate
+    private LocalDateTime createdAt;
+
+    @Builder
+    public Situation(String content, String parentId, String childId) {
+        this.content = content;
+        this.parentId = parentId;
+        this.childId = childId;
+    }
 }
