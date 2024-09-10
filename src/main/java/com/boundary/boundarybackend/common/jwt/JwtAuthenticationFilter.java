@@ -68,12 +68,13 @@ public class JwtAuthenticationFilter extends GenericFilter {
                     SecurityContextHolder.getContext().getAuthentication());
         }
         // 필터 체인 계속 진행
-        chain.doFilter(httpServletRequest, httpServletResponse);t a
+        chain.doFilter(httpServletRequest, httpServletResponse);
     }
 
     // 요청에서 액세스 토큰을 추출
     private String getAccessToken(HttpServletRequest request) {
         String accessToken = request.getHeader("access_token");
+        log.info("accessToken : "+ accessToken);
 
         // 액세스 토큰이 존재하고 비어있지 않으면 디코딩
         if (accessToken != null && !accessToken.isBlank()) {
