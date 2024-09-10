@@ -1,5 +1,6 @@
 package com.boundary.boundarybackend.common.util;
 
+import com.boundary.boundarybackend.domain.user.model.dto.vo.MemberRole;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,14 +34,16 @@ public class AuthenticationUtil {
      * 인증된 사용자의 역할을 가져옵니다.
      * @return 사용자의 역할(Set 형태). 인증되지 않은 경우 빈 Set을 반환합니다.
      */
-    public static Set<String> getMemberRole() {
+    public static MemberRole getMemberRole() {
         if (isAnonymous()) {
-            return Set.of();
+            return MemberRole.Child;
         }
         Authentication authentication = getAuthentication();
         return authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toSet());
+                .map(role -> MemberRole.valueOf(role))
+                .findFirst()
+                .orElse(MemberRole.Child);
     }
 
     /**
