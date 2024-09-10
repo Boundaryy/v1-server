@@ -23,7 +23,8 @@ public class AuthenticationUtil {
      * @return 인증된 사용자의 회원 ID. 인증되지 않은 경우 null을 반환합니다.
      */
     public static Long getMemberId() {
-        System.out.println(isAnonymous());
+        var anonymous = String.valueOf(isAnonymous());
+        log.warn(anonymous);
         if (isAnonymous()) {
             return null;
         }
@@ -68,9 +69,9 @@ public class AuthenticationUtil {
      */
     private static Authentication getAuthentication() {
         var context = SecurityContextHolder.getContext();
-        System.out.println("Context :"+ context);
+        log.info("Context :"+ context);
         var result = context.getAuthentication();
-        System.out.println("result : " + result);
+        log.info("result : " + result);
         return result;
     }
 }
