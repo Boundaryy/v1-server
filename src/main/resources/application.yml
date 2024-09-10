@@ -30,3 +30,7 @@ springdoc:
 #    key-store-type: ${SPRING_SSL_KEY_STORE_TYPE}  # SSL ???? ??
 #    key-alias: ${SPRING_SSL_KEY_ALIAS}  # ?????? ??? ?? ??
 #    key-store-password: ${SPRING_SSL_KEY_STORE_PASSWORD}  # ???? ????
+
+flask:
+  url:
+    base: ${AI_SERVER_URL_BASE}
