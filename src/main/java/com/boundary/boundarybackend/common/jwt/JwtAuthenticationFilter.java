@@ -35,20 +35,25 @@ public class JwtAuthenticationFilter extends GenericFilter {
 
         // 현재 인증 상태를 확인
         if (SecurityContextHolder.getContext().getAuthentication() == null) {
+            log.info("getAuthentication is null");
             // 요청에서 토큰 추출
             String token = getAccessToken(httpServletRequest);
+
+            log.info("토큰 : "+token);
 
             if (token != null) {
                 try {
                     // 토큰 검증 및 클레임 추출
                     Jwt.Claims claims = verify(token);
                     Long memberId = claims.memberId;
+                    log.info("memberId : "+memberId);
 //                    List<GrantedAuthority> authorities = getAuthorities(claims);
 
                     // 클레임이 유효하고 권한이 있으면 인증 객체 생성
                     if (memberId != null) {
                         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
                                 new UsernamePasswordAuthenticationToken(memberId, null);
+                        log.info("usernamePasswordAuthenticationToken" + usernamePasswordAuthenticationToken.toString());
                         // 인증 객체를 SecurityContextHolder에 설정
                         SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
                     }
@@ -63,7 +68,7 @@ public class JwtAuthenticationFilter extends GenericFilter {
                     SecurityContextHolder.getContext().getAuthentication());
         }
         // 필터 체인 계속 진행
-        chain.doFilter(httpServletRequest, httpServletResponse);
+        chain.doFilter(httpServletRequest, httpServletResponse);t a
     }
 
     // 요청에서 액세스 토큰을 추출
