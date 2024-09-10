@@ -1,7 +1,7 @@
 spring:
-  config:
-    import:
-      - optional:file:env/spring.env[.properties]  # 'env/spring.env' 또는 'env/spring.env.properties' 파일을 불러옴
+#  config:
+##    import:
+##      - optional:file:env/spring.env[.properties]  # 'env/spring.env' 또는 'env/spring.env.properties' 파일을 불러옴
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
