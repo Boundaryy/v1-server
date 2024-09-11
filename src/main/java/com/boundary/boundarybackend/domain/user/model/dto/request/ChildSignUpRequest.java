@@ -27,9 +27,6 @@ public class ChildSignUpRequest
     @Schema(description = "비밀번호")
     private String password; // 비밀번호
 
-    @Schema(description = "부모or아이 권한")
-    private MemberRole role; // 부모or아이
-
     @Schema(description = "아이 레벨 포인트")
     private Integer point; // 포인트
 }
