@@ -11,5 +11,7 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     Optional<User> findByUserId(String userId);
 
     Optional<User> findByRefreshToken(String refreshToken);
+    boolean existsByUserId(String userId);
+    boolean existsByChildId(String childId);
 
 }
