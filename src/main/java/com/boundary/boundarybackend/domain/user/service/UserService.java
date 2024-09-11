@@ -2,6 +2,7 @@ package com.boundary.boundarybackend.domain.user.service;
 
 import com.boundary.boundarybackend.domain.user.model.dto.request.ParentSignUpRequest;
 import com.boundary.boundarybackend.domain.user.model.dto.response.UserResponse;
+import com.boundary.boundarybackend.domain.user.model.dto.vo.MemberRole;
 import com.boundary.boundarybackend.domain.user.model.entity.Attendance;
 import com.boundary.boundarybackend.domain.user.repository.AttendanceRepository;
 import com.boundary.boundarybackend.domain.user.repository.UserRepository;
@@ -41,7 +42,7 @@ public class UserService {
                     .gender(req.getGender()) // 성별
                     .userId(req.getUserId()) // 사용자 아이디
                     .password(new BCryptPasswordEncoder().encode(req.getPassword())) // 비밀번호
-                    .role(req.getRole()) // 부모or아이 권한
+                    .role(MemberRole.Child) // 부모or아이 권한
                     .point(req.getPoint()) // 포인트
                     .build()
             );
@@ -68,7 +69,7 @@ public class UserService {
                     .phoneNum(req.getPhoneNum()) // 전화번호
                     .userId(req.getUserId()) // 사용자 아이디
                     .password(new BCryptPasswordEncoder().encode(req.getPassword())) // 비밀번호
-                    .role(req.getRole()) // 부모 or 아이 권한
+                    .role(MemberRole.Parent) // 부모 or 아이 권한
                     .childId(req.getChildId()) // 아이 아이디
                     .build()
             );
