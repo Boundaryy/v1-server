@@ -10,7 +10,6 @@ public enum MemberRole
     Child("Child"),
     Parent("Parent");
 
-
     private final String role;
 }
 
