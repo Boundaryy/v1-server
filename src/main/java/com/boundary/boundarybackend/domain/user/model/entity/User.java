@@ -25,6 +25,7 @@ public class User {
 
     private String gender; // 성별
 
+    @Column(unique = true)
     private String userId; // 아이디
 
     private String password; // 비밀번호
@@ -33,5 +34,6 @@ public class User {
 
     private Integer point; // 포인트
 
+    @Column(unique = true)
     private String childId; // 아이 아이디
 }
