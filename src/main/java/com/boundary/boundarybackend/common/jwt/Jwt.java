@@ -65,15 +65,20 @@ public class Jwt {
         Date exp;
 
         Claims(DecodedJWT decodedJwt) {
-            Claim memberId = decodedJwt.getClaim("memberId");
-            if (!memberId.isNull()) {
-                this.memberId = memberId.asLong();
+            Claim memberIdClaim = decodedJwt.getClaim("memberId");
+            if (!memberIdClaim.isNull()) {
+                this.memberId = memberIdClaim.asLong();
             }
             this.iat = decodedJwt.getIssuedAt();
             this.exp = decodedJwt.getExpiresAt();
+
+            Claim roleClaim = decodedJwt.getClaim("role");
+            if (!roleClaim.isNull()) {
+                this.role = MemberRole.valueOf(roleClaim.asString());
+            }
         }
 
-        public static Claims from(Long memberId,MemberRole role) {
+        public static Claims from(Long memberId, MemberRole role) {
             Claims claims = new Claims();
             claims.memberId = memberId;
             claims.role = role;
@@ -84,10 +89,11 @@ public class Jwt {
         public String toString() {
             return "Claims{"
                     + "memberId=" + memberId
-                    + ", roles=" + role // 배열이 아니라면 직접 사용
+                    + ", role=" + role // 수정
                     + ", iat=" + iat
                     + ", exp=" + exp
                     + '}';
         }
     }
 }
+
