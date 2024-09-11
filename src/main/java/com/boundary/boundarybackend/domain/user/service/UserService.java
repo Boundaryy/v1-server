@@ -29,8 +29,12 @@ public class UserService {
     @Transactional
     public void createChild(ChildSignUpRequest req) {
         try {
-            // 회원 저장
-            User user = userRepository.save(User.builder()
+            if (userRepository.existsByUserId(req.getUserId())) {
+                log.error("사용자 아이디가 이미 존재합니다: {}", req.getUserId());
+                throw new BusinessException(ErrorCode.DUPLICATED);
+            }
+
+                userRepository.save(User.builder()
                     .name(req.getName()) // 이름
                     .age(req.getAge()) // 나이
                     .phoneNum(req.getPhoneNum()) // 전화번호
@@ -49,9 +53,18 @@ public class UserService {
 
     @Transactional
     public void createParent(ParentSignUpRequest req) {
+        if (userRepository.existsByUserId(req.getUserId())) {
+            log.error("사용자 아이디가 이미 존재합니다: {}", req.getUserId());
+            throw new BusinessException(ErrorCode.DUPLICATED);
+        }
+
+        if (userRepository.existsByChildId(req.getChildId())) {
+            log.error("아이 아이디가 이미 존재합니다: {}", req.getChildId());
+            throw new BusinessException(ErrorCode.DUPLICATED);
+        }
+
         try {
-            // 회원 저장
-            User user = userRepository.save(User.builder()
+            userRepository.save(User.builder()
                     .phoneNum(req.getPhoneNum()) // 전화번호
                     .userId(req.getUserId()) // 사용자 아이디
                     .password(new BCryptPasswordEncoder().encode(req.getPassword())) // 비밀번호
@@ -64,6 +77,7 @@ public class UserService {
             throw new BusinessException(ErrorCode.UNKNOWN_ERROR);
         }
     }
+
 
     @Transactional
     public boolean recordAttendance(Long userId) {
