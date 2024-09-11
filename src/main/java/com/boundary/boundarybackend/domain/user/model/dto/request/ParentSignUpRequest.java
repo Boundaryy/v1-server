@@ -20,7 +20,4 @@ public class ParentSignUpRequest {
 
     @Schema(description = "아이 아이디")
     private String ChildId; // 비밀번호
-
-    @Schema(description = "부모or아이 권한")
-    private MemberRole role; // 부모or아이
 }

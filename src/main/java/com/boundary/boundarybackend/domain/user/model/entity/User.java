@@ -30,6 +30,7 @@ public class User {
 
     private String password; // 비밀번호
 
+    @Enumerated(EnumType.STRING)
     private MemberRole role; // 부모or아이
 
     private Integer point; // 포인트
