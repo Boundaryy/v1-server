@@ -1,5 +1,6 @@
 package com.boundary.boundarybackend.common.util;
 
+import com.boundary.boundarybackend.common.jwt.Jwt;
 import com.boundary.boundarybackend.domain.user.model.dto.vo.MemberRole;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -38,14 +39,24 @@ public class AuthenticationUtil {
      */
     public static MemberRole getMemberRole() {
         if (isAnonymous()) {
-            return MemberRole.Child;
+            log.info("unknown");
+            return MemberRole.Child;  // 익명 사용자는 기본적으로 'Child' 역할로 처리
         }
+
         Authentication authentication = getAuthentication();
+
+        // JWT에서 역할 정보 추출
+        if (authentication.getPrincipal() instanceof Jwt.Claims) {
+            Jwt.Claims claims = (Jwt.Claims) authentication.getPrincipal();
+            return claims.getRole();  // JWT에 저장된 역할 반환
+        }
+
+        // 일반적으로 Spring Security의 GrantedAuthority에서 역할을 추출
         return authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .map(role -> MemberRole.valueOf(role))
                 .findFirst()
-                .orElse(MemberRole.Child);
+                .orElse(MemberRole.Child);  // 기본값으로 'Child' 반환
     }
 
     /**
@@ -55,15 +66,6 @@ public class AuthenticationUtil {
     public static boolean isAnonymous() {
         Authentication authentication = getAuthentication();
         return authentication == null || authentication.getPrincipal().equals("anonymousUser");
-    }
-
-    /**
-     * 주어진 회원 ID가 현재 인증된 사용자와 일치하는지 확인합니다.
-     * @param memberId 확인할 회원 ID
-     * @return 일치하면 true, 그렇지 않으면 false를 반환합니다.
-     */
-    public static boolean isValidAccess(Long memberId) {
-        return Objects.equals(AuthenticationUtil.getMemberId(), memberId);
     }
 
     /**
@@ -78,3 +80,4 @@ public class AuthenticationUtil {
         return result;
     }
 }
+
