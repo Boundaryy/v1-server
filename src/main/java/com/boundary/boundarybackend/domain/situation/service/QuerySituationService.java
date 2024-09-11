@@ -9,12 +9,13 @@ import com.boundary.boundarybackend.domain.user.model.dto.vo.MemberRole;
 import com.boundary.boundarybackend.domain.user.model.entity.User;
 import com.boundary.boundarybackend.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-
+@Slf4j
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -31,6 +32,7 @@ public class QuerySituationService {
     }
 
     public ResponseEntity<List<GetSituationResponse>> getAllSituation(Long userId, MemberRole memberRole){
+        log.info("권한:"+memberRole.getRole());
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
         String stId = user.getUserId();
