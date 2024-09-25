@@ -64,6 +64,7 @@ public class JwtAuthenticationFilter extends GenericFilter {
     }
 
     private String getAccessToken(HttpServletRequest request) {
+        log.warn("리퀘스트 :" +request.toString());
         String accessToken = request.getHeader("access_token");
         log.info("accessToken : "+ accessToken);
 
