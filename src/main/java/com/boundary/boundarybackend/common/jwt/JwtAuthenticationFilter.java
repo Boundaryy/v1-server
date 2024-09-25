@@ -68,31 +68,35 @@ public class JwtAuthenticationFilter extends GenericFilter {
         log.warn("리퀘스트 로그 시작");
 
         log.warn("Method: " + request.getMethod());
-
         log.warn("Request URI: " + request.getRequestURI());
-
         log.warn("Query String: " + request.getQueryString());
 
         log.warn("Headers:");
         Enumeration<String> headerNames = request.getHeaderNames();
-        log.warn(headerNames.toString());
         while (headerNames.hasMoreElements()) {
             String headerName = headerNames.nextElement();
             log.info("헤더: " + headerName + " 값: " + request.getHeader(headerName));
         }
 
         String accessToken = request.getHeader("access_token");
-        log.info("accessToken : " + accessToken);
+        log.info("Raw accessToken : " + accessToken); // access_token 값 출력
 
         if (accessToken != null && !accessToken.isBlank()) {
+            log.info("access_token 존재, 디코딩 시도");
             try {
-                return URLDecoder.decode(accessToken, StandardCharsets.UTF_8);
+                String decodedToken = URLDecoder.decode(accessToken, StandardCharsets.UTF_8);
+                log.info("Decoded accessToken : " + decodedToken); // 디코딩 후 값 출력
+                return decodedToken;
             } catch (Exception e) {
-                log.error("엑세스 토큰 없어용" + e.getMessage(),e);
+                log.error("엑세스 토큰 디코딩 실패: " + e.getMessage(), e);
             }
+        } else {
+            log.warn("access_token이 null이거나 빈 값입니다.");
         }
+
         return null;
     }
+
 
 
     private Jwt.Claims verify(String token) {
