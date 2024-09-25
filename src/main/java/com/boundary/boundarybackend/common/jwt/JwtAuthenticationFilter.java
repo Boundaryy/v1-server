@@ -17,7 +17,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -35,7 +34,7 @@ public class JwtAuthenticationFilter extends GenericFilter {
             log.info("getAuthentication is null");
             String token = getAccessToken(httpServletRequest);
 
-            log.info("토큰 : "+token);
+            log.info("토큰 : " + token);
 
             if (token != null) {
                 try {
@@ -43,14 +42,14 @@ public class JwtAuthenticationFilter extends GenericFilter {
                     Long memberId = claims.getMemberId();
                     MemberRole role = claims.getRole();
 
-                    log.info("memberId : "+memberId);
-                    log.info("role : "+role);
+                    log.info("memberId : " + memberId);
+                    log.info("role : " + role);
 
                     if (memberId != null) {
                         Collection<GrantedAuthority> authorities = getAuthorities(role);
                         UsernamePasswordAuthenticationToken authentication =
                                 new UsernamePasswordAuthenticationToken(memberId, null, authorities);
-                        log.info("authentication : "+authentication.toString());
+                        log.info("authentication : " + authentication.toString());
                         SecurityContextHolder.getContext().setAuthentication(authentication);
                     }
                 } catch (Exception e) {
@@ -78,20 +77,21 @@ public class JwtAuthenticationFilter extends GenericFilter {
             log.info("헤더: " + headerName + " 값: " + request.getHeader(headerName));
         }
 
-        String accessToken = request.getHeader("access_token");
-        log.info("Raw accessToken : " + accessToken); // access_token 값 출력
+        String authorizationHeader = request.getHeader("Authorization"); // Authorization 헤더에서 토큰을 가져옴
+        log.info("Raw Authorization Header : " + authorizationHeader);
 
-        if (accessToken != null && !accessToken.isBlank()) {
-            log.info("access_token 존재, 디코딩 시도");
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            log.info("Authorization 헤더에 Bearer 토큰 존재");
+            String token = authorizationHeader.substring(7); // 'Bearer ' 이후의 토큰만 추출
             try {
-                String decodedToken = URLDecoder.decode(accessToken, StandardCharsets.UTF_8);
-                log.info("Decoded accessToken : " + decodedToken); // 디코딩 후 값 출력
+                String decodedToken = URLDecoder.decode(token, StandardCharsets.UTF_8);
+                log.info("Decoded accessToken : " + decodedToken);
                 return decodedToken;
             } catch (Exception e) {
                 log.error("엑세스 토큰 디코딩 실패: " + e.getMessage(), e);
             }
         } else {
-            log.warn("access_token이 null이거나 빈 값입니다.");
+            log.warn("Authorization 헤더가 null이거나 Bearer 토큰이 없습니다.");
         }
 
         return null;
@@ -105,4 +105,3 @@ public class JwtAuthenticationFilter extends GenericFilter {
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
 }
-
