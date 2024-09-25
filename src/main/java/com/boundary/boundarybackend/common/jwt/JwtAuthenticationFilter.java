@@ -65,8 +65,17 @@ public class JwtAuthenticationFilter extends GenericFilter {
     }
 
     private String getAccessToken(HttpServletRequest request) {
-        log.warn("리퀘스트 :" + request.toString());
+        log.warn("리퀘스트 로그 시작");
+
+        log.warn("Method: " + request.getMethod());
+
+        log.warn("Request URI: " + request.getRequestURI());
+
+        log.warn("Query String: " + request.getQueryString());
+
+        log.warn("Headers:");
         Enumeration<String> headerNames = request.getHeaderNames();
+        log.warn(headerNames.toString());
         while (headerNames.hasMoreElements()) {
             String headerName = headerNames.nextElement();
             log.info("헤더: " + headerName + " 값: " + request.getHeader(headerName));
