@@ -97,8 +97,6 @@ public class JwtAuthenticationFilter extends GenericFilter {
         return null;
     }
 
-
-
     private Jwt.Claims verify(String token) {
         return jwt.verify(token);
     }
