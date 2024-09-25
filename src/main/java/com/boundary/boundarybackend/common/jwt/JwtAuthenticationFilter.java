@@ -88,7 +88,7 @@ public class JwtAuthenticationFilter extends GenericFilter {
             try {
                 return URLDecoder.decode(accessToken, StandardCharsets.UTF_8);
             } catch (Exception e) {
-                log.warn(e.getMessage(), e);
+                log.error("엑세스 토큰 없어용" + e.getMessage());
             }
         }
         return null;
