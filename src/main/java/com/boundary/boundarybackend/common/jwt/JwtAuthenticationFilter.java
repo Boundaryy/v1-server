@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -64,9 +65,15 @@ public class JwtAuthenticationFilter extends GenericFilter {
     }
 
     private String getAccessToken(HttpServletRequest request) {
-        log.warn("리퀘스트 :" +request.toString());
+        log.warn("리퀘스트 :" + request.toString());
+        Enumeration<String> headerNames = request.getHeaderNames();
+        while (headerNames.hasMoreElements()) {
+            String headerName = headerNames.nextElement();
+            log.info("헤더: " + headerName + " 값: " + request.getHeader(headerName));
+        }
+
         String accessToken = request.getHeader("access_token");
-        log.info("accessToken : "+ accessToken);
+        log.info("accessToken : " + accessToken);
 
         if (accessToken != null && !accessToken.isBlank()) {
             try {
@@ -77,6 +84,7 @@ public class JwtAuthenticationFilter extends GenericFilter {
         }
         return null;
     }
+
 
     private Jwt.Claims verify(String token) {
         return jwt.verify(token);
