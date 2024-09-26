@@ -71,6 +71,7 @@ public class UserService {
                     .password(new BCryptPasswordEncoder().encode(req.getPassword())) // 비밀번호
                     .role(MemberRole.Parent) // 부모 or 아이 권한
                     .childId(req.getChildId()) // 아이 아이디
+                    .point(0)
                     .build()
             );
         } catch (Exception e) {
