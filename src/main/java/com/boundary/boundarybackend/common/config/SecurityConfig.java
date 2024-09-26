@@ -44,16 +44,16 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("*")); // 필요한 도메인으로 설정
+        configuration.setAllowedOrigins(List.of("http://localhost:8081", "https://port-0-v1-server-9zxht12blq9gr7pi.sel4.cloudtype.app")); // 허용할 도메인 명시
         configuration.setAllowedMethods(List.of("GET", "POST", "OPTIONS", "PUT", "PATCH", "DELETE"));
         configuration.setAllowedHeaders(
                 List.of(
                         "Origin", "Accept", "X-Requested-With", "Content-Type",
                         "Access-Control-Request-Method", "Access-Control-Request-Headers",
-                        "Authorization", "access_token", "refresh_token" // 비표준 헤더 허용
+                        "Authorization", "access_token", "refresh_token"
                 ));
-        configuration.setExposedHeaders(List.of("access_token", "refresh_token")); // 클라이언트에서 접근할 수 있도록 노출
-        configuration.setAllowCredentials(true); // 필요한 경우 true로 설정
+        configuration.setExposedHeaders(List.of("access_token", "refresh_token")); // 노출할 헤더 설정
+        configuration.setAllowCredentials(true); // 인증 관련 정보 허용 여부
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
